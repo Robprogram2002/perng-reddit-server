@@ -6,6 +6,7 @@ import sgMail from '@sendgrid/mail';
 import RegisterInput from './input';
 import RegisterResponse from './response';
 import User from '../../../entities/User';
+import Provider from '../../../types/AuthProvider';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ class RegisterResolver {
         password: hashedPassword,
         email,
         username,
-        authProvider: 'local',
+        authProvider: Provider.LOCAL,
       }).save();
 
       const secret = process.env.JWT_SECRET_EMAIL || 'some_secret_word';
@@ -62,7 +63,6 @@ class RegisterResolver {
         user,
       };
     } catch (error) {
-      console.log(error);
       return {
         code: 500,
         success: false,

@@ -7,6 +7,7 @@ import User from '../../../entities/User';
 import RegisterResponse from '../Register/response';
 import LocalSignInInput from './input';
 import { RequestContext } from '../../../types/RequestContext';
+import Provider from '../../../types/AuthProvider';
 
 @Resolver()
 class LocalSignInResolver {
@@ -95,7 +96,7 @@ class LocalSignInResolver {
         user = new User({
           email: firebaseUser.email,
           username: firebaseUser.name,
-          authProvider: 'google',
+          authProvider: Provider.GOOGLE,
           emailConfirmation: firebaseUser.email_verified,
           avatarUrl: firebaseUser.picture,
         });

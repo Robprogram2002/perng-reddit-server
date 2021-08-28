@@ -4,7 +4,7 @@ import express from 'express';
 import { createConnection } from 'typeorm';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 import cors from 'cors';
 import createSchema from './utils/createSchema';
 
@@ -28,7 +28,7 @@ const main = async () => {
     const app = express();
 
     app.use(cookieParser());
-    app.use(helmet());
+    // app.use(helmet());
     app.use(
       cors({
         credentials: true,

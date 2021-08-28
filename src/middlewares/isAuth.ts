@@ -7,7 +7,6 @@ import User from '../entities/User';
 const isAuth: MiddlewareFn<RequestContext> = async ({ context }, next) => {
   try {
     let { token } = context.req.cookies;
-
     if (!token) return next();
 
     token = JSON.parse(token);

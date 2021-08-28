@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
+import Provider from '../types/AuthProvider';
 import SharedEntity from './Entity';
 
 @ObjectType()
@@ -35,8 +37,8 @@ class User extends SharedEntity {
   @Column('text', { unique: true, nullable: false })
   email: string | undefined;
 
-  @Column('varchar')
-  authProvider: string | undefined;
+  @Column('enum', { enum: Provider })
+  authProvider: Provider | undefined;
 
   @Column('text', { nullable: true })
   password: string | undefined;
