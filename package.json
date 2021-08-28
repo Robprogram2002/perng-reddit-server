@@ -4,7 +4,18 @@
   "description": "server graphql api for reddit clone app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && node build/index.js",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+    "build": "tsc",
+    "test": "jest --verbose --detectOpenHandles",
+    "test:watch": "jest --verbose --watch",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint . --ext ts --ext tsx --ext js",
+    "format": "prettier --write .",
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types ",
+    "prepare": "husky install"
   },
   "keywords": [
     "graphql",
@@ -17,7 +28,8 @@
   "author": "Roberto Martinez Rivera",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^3.3.0",
+    "@sendgrid/mail": "^7.4.6",
+    "apollo-server-express": "^3.2.0",
     "bcrypt": "^5.0.1",
     "class-validator": "^0.13.1",
     "cloudinary": "^1.26.3",
@@ -30,11 +42,13 @@
     "graphql": "^15.5.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.14.1",
     "pg": "^8.7.1",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.1.10",
     "slugify": "^1.6.0",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.37"
+    "typeorm": "0.2.37",
+    "typescript": "^4.3.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -46,18 +60,39 @@
     "@types/graphql": "^14.5.0",
     "@types/jest": "^27.0.1",
     "@types/jsonwebtoken": "^8.5.5",
-    "@types/node": "^16.7.3",
+    "@types/node": "^8.0.29",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
-    "husky": "^7.0.2",
+    "eslint-plugin-jest": "^24.4.0",
+    "husky": "^7.0.0",
     "jest": "^27.1.0",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.5",
-    "ts-node": "^10.2.1",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "^4.4.2"
+    "ts-node": "3.3.0",
+    "ts-node-dev": "^1.1.8"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/tests/**",
+      "!build/**"
+    ],
+    "testPathIgnorePatterns": [
+      "build",
+      "dist",
+      "node_modules"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      "/build/",
+      "build",
+      "./build"
+    ]
   }
 }
