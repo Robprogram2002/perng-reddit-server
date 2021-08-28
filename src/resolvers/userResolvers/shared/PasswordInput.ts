@@ -1,12 +1,8 @@
+import { Length, Matches } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
-import { Length, IsEmail, Matches } from 'class-validator';
 
 @InputType()
-class LocalSignInInput {
-  @Field()
-  @IsEmail()
-  email!: string;
-
+class PasswordInput {
   @Field(() => String)
   @Length(8, 125, { always: true })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
@@ -15,4 +11,4 @@ class LocalSignInInput {
   password!: string;
 }
 
-export default LocalSignInInput;
+export default PasswordInput;

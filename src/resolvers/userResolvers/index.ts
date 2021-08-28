@@ -1,11 +1,11 @@
 import EmailVerificationResolver from './emailVerification/resolver';
-import LocalSignInResolver from './LocalSignIn/resolver';
+import LoginResolver from './Login/resolver';
 import MeResolver from './me/resolver';
 import RegisterResolver from './Register/resolver';
 
 const userResolvers = [
   RegisterResolver,
-  LocalSignInResolver,
+  LoginResolver,
   MeResolver,
   EmailVerificationResolver,
 ];

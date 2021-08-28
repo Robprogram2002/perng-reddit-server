@@ -38,7 +38,7 @@ class User extends SharedEntity {
   @Column('varchar')
   authProvider: string | undefined;
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   password: string | undefined;
 }
 
