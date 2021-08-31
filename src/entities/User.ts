@@ -25,8 +25,9 @@ class User extends SharedEntity {
 
   @Field(() => String, {
     description: 'url of the user banner/background image',
+    nullable: true,
   })
-  @Column('varchar', { nullable: true })
+  @Column('varchar', { nullable: true, default: null })
   bannerUrl: string | undefined;
 
   // @Field(() => Boolean, {})

@@ -5,21 +5,25 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../../../entities/User';
 import BaseResponse from '../../../utils/baseResponse';
-import ResetPasswordInput from './input';
+import { ResetPasswordInput, SendEmailInput } from './input';
 
 dotenv.config();
 
 @Resolver()
-class MeResolver {
+class RessetPasswordResolver {
   @Mutation(() => BaseResponse)
   async sendEmail(
-    @Arg('email', () => String) email: string
+    @Arg('input', () => SendEmailInput)
+    { email, username }: SendEmailInput
   ): Promise<BaseResponse> {
     try {
-      const user = await User.findOne({ email }, { loadEagerRelations: false });
+      const user = await User.findOne(
+        { email, username },
+        { loadEagerRelations: false }
+      );
 
       if (!user) {
-        throw new Error('Not user found with this email');
+        throw new Error('Not user found with this email and username');
       }
 
       const secret = process.env.JWT_SECRET_EMAIL || 'some_secret_word';
@@ -102,4 +106,4 @@ class MeResolver {
   }
 }
 
-export default MeResolver;
+export default RessetPasswordResolver;
