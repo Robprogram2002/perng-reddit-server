@@ -16,10 +16,11 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 class RegisterResolver {
   @Mutation(() => RegisterResponse)
   async register(
-    @Arg('input') { password, email, username }: RegisterInput
+    @Arg('input') { password, email, confirmPassword, username }: RegisterInput
   ): Promise<RegisterResponse> {
     try {
       const hashedPassword = await bcrypt.hash(password, 12);
+      console.log(confirmPassword);
 
       const user = await new User({
         password: hashedPassword,

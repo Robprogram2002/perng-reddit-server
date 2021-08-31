@@ -13,11 +13,14 @@ import Provider from '../../../types/AuthProvider';
 class LocalSignInResolver {
   @Mutation(() => RegisterResponse)
   async signIn(
-    @Arg('input') { password, email }: LocalSignInInput,
+    @Arg('input') { password, username }: LocalSignInInput,
     @Ctx() { res }: RequestContext
   ): Promise<RegisterResponse> {
     try {
-      const user = await User.findOne({ email }, { loadEagerRelations: false });
+      const user = await User.findOne(
+        { username },
+        { loadEagerRelations: false }
+      );
 
       if (!user) {
         throw new Error('No user found with these credentials');

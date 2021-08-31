@@ -29,15 +29,19 @@ const main = async () => {
 
     app.use(cookieParser());
     // app.use(helmet());
-    app.use(
-      cors({
-        credentials: true,
-        origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
-        optionsSuccessStatus: 200,
-      })
-    );
+    const corsConfig = {
+      credentials: true,
+      origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+      optionsSuccessStatus: 200,
+    };
 
-    apolloServer.applyMiddleware({ app, path: '/api/graphql' });
+    app.use(cors(corsConfig));
+
+    apolloServer.applyMiddleware({
+      app,
+      path: '/api/graphql',
+      cors: corsConfig,
+    });
 
     app.listen(process.env.PORT || 5000, () =>
       console.log('Server is running on http://localhost:5000')

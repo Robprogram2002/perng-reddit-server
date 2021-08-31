@@ -24,7 +24,7 @@ class RegisterInput {
   @Field(() => String)
   @Length(8, 125, { always: true })
   @Match('password', { message: 'passwords not mached' })
-  passwordConfirm!: string;
+  confirmPassword!: string;
 }
 
 export default RegisterInput;

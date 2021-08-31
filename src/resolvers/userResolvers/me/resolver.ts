@@ -15,7 +15,7 @@ class MeResolver {
       return null;
     }
 
-    return ctx.res.locals.user;
+    return { ...ctx.res.locals.user, bannerUrl: 'https://random' };
   }
 }
 
