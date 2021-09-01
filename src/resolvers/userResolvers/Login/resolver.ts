@@ -91,7 +91,7 @@ class LocalSignInResolver {
   ): Promise<RegisterResponse> {
     try {
       const firebaseUser = await admin.auth().verifyIdToken(token);
-
+      console.log(firebaseUser);
       // if not user, create one in DB
       let user = await User.findOne({ email: firebaseUser.email });
 
