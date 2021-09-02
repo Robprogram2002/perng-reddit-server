@@ -6,18 +6,21 @@ import User from '../entities/User';
 
 const isAuth: MiddlewareFn<RequestContext> = async ({ context }, next) => {
   try {
-    let { token } = context.req.cookies;
+    const { token } = context.req.cookies;
     if (!token) return next();
 
-    token = JSON.parse(token);
+    const authData = JSON.parse(token);
 
-    if (token.provider === 'local') {
-      const result = jwt.decode(token.token, { complete: true, json: false });
+    if (authData.provider === 'local') {
+      const result = jwt.decode(authData.token, {
+        complete: true,
+        json: false,
+      });
       context.res.locals.user = await User.findOne({
         where: { email: result?.payload.email },
       });
     } else {
-      const firebaseUser = await admin.auth().verifyIdToken(token);
+      const firebaseUser = await admin.auth().verifyIdToken(authData.token);
       context.res.locals.user = await User.findOne({
         where: {
           email: firebaseUser.email,
@@ -27,6 +30,7 @@ const isAuth: MiddlewareFn<RequestContext> = async ({ context }, next) => {
 
     return next();
   } catch (error) {
+    console.log(error);
     throw new Error('sommething went wrong, plase try again');
   }
 };

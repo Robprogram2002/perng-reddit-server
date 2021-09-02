@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import Provider from '../types/AuthProvider';
 import SharedEntity from './Entity';
+import Sub from './Sub';
 
 @ObjectType()
 @Entity()
@@ -43,6 +44,9 @@ class User extends SharedEntity {
 
   @Column('text', { nullable: true })
   password: string | undefined;
+
+  @OneToMany(() => Sub, (sub) => sub.user)
+  subs: Sub[] | undefined;
 }
 
 export default User;
