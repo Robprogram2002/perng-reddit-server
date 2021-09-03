@@ -1,4 +1,4 @@
-import { Field, ID } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
   PrimaryGeneratedColumn,
   BaseEntity,
@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+@ObjectType()
 export default abstract class SharedEntity extends BaseEntity {
   @Field(() => ID, { description: 'Instance unique uuid identifier' })
   @PrimaryGeneratedColumn('uuid')

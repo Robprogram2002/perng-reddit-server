@@ -7,6 +7,7 @@ import SubType from '../../../types/SubTypes';
 import isAuthValidaton from '../../../middlewares/isAuthValidaton';
 import isAuth from '../../../middlewares/isAuth';
 import { RequestContext } from '../../../types/RequestContext';
+import SubSettings from '../../../entities/SubSettings';
 
 dotenv.config();
 
@@ -29,12 +30,14 @@ class CreateSubResolver {
       } else {
         throw new Error('invalid value for type field');
       }
-      // console.log(ctx.res.locals.user);
+      const settings = await new SubSettings({}).save();
+
       const sub = await new Sub({
         adultContent,
         name,
         type: subType,
         username: res.locals.user.username,
+        settings,
       }).save();
 
       return {
@@ -44,11 +47,15 @@ class CreateSubResolver {
         sub,
       };
     } catch (error) {
-      console.log(error);
+      let message = 'something went wrong, please try again';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+
       return {
         code: 500,
         success: false,
-        message: error.message || 'something went wrong, please try again',
+        message,
         sub: null,
       };
     }

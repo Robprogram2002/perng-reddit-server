@@ -75,10 +75,14 @@ class LocalSignInResolver {
         user,
       };
     } catch (error) {
+      let message = 'something went wrong, please try again';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       return {
         code: 500,
         success: false,
-        message: error.message || 'something went wrong, please try again',
+        message,
         user: null,
       };
     }
@@ -129,10 +133,14 @@ class LocalSignInResolver {
         user,
       };
     } catch (error) {
+      let message = 'something went wrong, please try again';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       return {
         code: 500,
         success: false,
-        message: error.message || 'something went wrong, please try again',
+        message,
         user: null,
       };
     }

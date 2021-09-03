@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import SubType from '../types/SubTypes';
 import SharedEntity from './Entity';
+import SubSettings from './SubSettings';
 import User from './User';
 
 @ObjectType()
@@ -57,6 +57,16 @@ class Sub extends SharedEntity {
   })
   @Column('varchar', { length: 250 })
   username: string | undefined;
+
+  // @Field(() => ID, {
+  //   description: 'id of the settings entity for this sub',
+  // })
+  // @Column('uuid', {})
+  // settingsId: string | undefined;
+
+  @OneToOne(() => SubSettings)
+  @JoinColumn()
+  settings: SubSettings | undefined;
 
   @ManyToOne(() => User, (user) => user.subs)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })

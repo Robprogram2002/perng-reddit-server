@@ -60,10 +60,14 @@ class RessetPasswordResolver {
         message: `email seny to ${user.email} for password reset successfully`,
       };
     } catch (error) {
+      let message = 'something went wrong, please try again';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       return {
         code: 200,
         success: false,
-        message: error.message || 'server error',
+        message,
       };
     }
   }
@@ -97,10 +101,14 @@ class RessetPasswordResolver {
         message: "user's password was updated successfully",
       };
     } catch (error) {
+      let message = 'something went wrong, please try again';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       return {
         code: 500,
         success: false,
-        message: error.message || 'something went wrong',
+        message,
       };
     }
   }
