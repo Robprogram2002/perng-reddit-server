@@ -1,7 +1,19 @@
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
+import ColorImage from '../resolvers/subResolvers/shared/ColorImageType';
 import BannerSize from '../types/SubSettingsTypes';
+import ImageObject from '../resolvers/shared/ImagObject';
 import SharedEntity from './Entity';
+
+const defaultSubBodyBackground: ColorImage = {
+  type: 'color',
+  value: '#DAE0E6',
+};
+
+const defaultPostBackground: ColorImage = {
+  type: 'color',
+  value: '#ffffff',
+};
 
 @ObjectType()
 @Entity()
@@ -11,6 +23,24 @@ class SubSettings extends SharedEntity {
     Object.assign(this, sub);
   }
 
+  @Field(() => ImageObject, {
+    description: "image object for the sub's profile image",
+    nullable: true,
+  })
+  @Column('simple-json', { nullable: true, default: null })
+  profile!: ImageObject | null;
+
+  @Field(() => String, { description: "sub's title", nullable: true })
+  @Column('varchar', { length: 250, nullable: true, default: null })
+  title!: string | null;
+
+  @Field(() => ImageObject, {
+    description: "image object for the sub's banner image",
+    nullable: true,
+  })
+  @Column('simple-json', { nullable: true, default: null })
+  banner!: ImageObject | null;
+
   @Field(() => String, { description: "sub's base color for theme" })
   @Column('varchar', { length: 100, default: '#0079d3' })
   baseColor: string | undefined;
@@ -19,11 +49,12 @@ class SubSettings extends SharedEntity {
   @Column('varchar', { length: 100, default: '#0079d3' })
   highlightColor: string | undefined;
 
-  @Field(() => String, {
-    description: "color or url for the sub'body background ",
+  @Field(() => ColorImage, {
+    description:
+      "Json type field. Store the type and value for the sub's body background",
   })
-  @Column('varchar', { length: 250, default: '#DAE0E6' })
-  bodyBackground: string | undefined;
+  @Column('simple-json', { default: defaultSubBodyBackground })
+  bodyBackground: ColorImage | undefined;
 
   @Field(() => BannerSize, {
     description: "sub's banner size ",
@@ -37,11 +68,12 @@ class SubSettings extends SharedEntity {
   @Column('varchar', { length: 100, default: '#000000' })
   postTitleColor: string | undefined;
 
-  @Field(() => String, {
-    description: "color or url for the body of sub's posts ",
+  @Field(() => ColorImage, {
+    description:
+      "Json type field. Store the type and value for the post's body background",
   })
-  @Column('varchar', { length: 250, default: '#ffffff' })
-  postBackground: string | undefined;
+  @Column('simple-json', { default: defaultPostBackground })
+  postBackground: ColorImage | undefined;
 }
 
 export default SubSettings;

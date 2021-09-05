@@ -17,24 +17,6 @@ class Sub extends SharedEntity {
   @Column('varchar', { unique: true, length: 250 })
   name: string | undefined;
 
-  @Field(() => String, { description: "sub's title", nullable: true })
-  @Column('varchar', { length: 250, nullable: true })
-  title: string | undefined;
-
-  @Field(() => String, {
-    description: 'url of the sub profile image',
-    nullable: true,
-  })
-  @Column('varchar', { nullable: true, length: 250, default: null })
-  profileUrl: string | undefined;
-
-  @Field(() => String, {
-    description: "url of the sub's banner image ",
-    nullable: true,
-  })
-  @Column('varchar', { nullable: true, length: 250, default: null })
-  bannerUrl: string | undefined;
-
   @Field(() => SubType, {
     description: 'authorization type of the sub',
   })
@@ -49,8 +31,8 @@ class Sub extends SharedEntity {
   adultContent!: boolean;
 
   @Field(() => String, { description: "sub's description", nullable: true })
-  @Column('text', { nullable: true })
-  description: string | undefined;
+  @Column('text', { nullable: true, default: null })
+  description!: string | null;
 
   @Field(() => String, {
     description: 'username of the user that created this sub',
@@ -58,12 +40,9 @@ class Sub extends SharedEntity {
   @Column('varchar', { length: 250 })
   username: string | undefined;
 
-  // @Field(() => ID, {
-  //   description: 'id of the settings entity for this sub',
-  // })
-  // @Column('uuid', {})
-  // settingsId: string | undefined;
-
+  @Field(() => SubSettings, {
+    description: 'settiings entity for this sub',
+  })
   @OneToOne(() => SubSettings)
   @JoinColumn()
   settings: SubSettings | undefined;

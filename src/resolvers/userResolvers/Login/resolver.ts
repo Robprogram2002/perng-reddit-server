@@ -2,7 +2,7 @@ import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-import admin from '../../../firebase';
+import admin from '../../../utils/firebase';
 import User from '../../../entities/User';
 import RegisterResponse from '../Register/response';
 import LocalSignInInput from './input';

@@ -4,7 +4,7 @@ import sgMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../../../entities/User';
-import BaseResponse from '../../../utils/baseResponse';
+import BaseResponse from '../../shared/baseResponse';
 import { ResetPasswordInput, SendEmailInput } from './input';
 
 dotenv.config();
@@ -90,6 +90,7 @@ class RessetPasswordResolver {
 
       const update = await User.update({ email }, { password: hashedPassword });
       console.log(update);
+      console.log(update.raw);
 
       if (!update.affected || update.affected === 0) {
         if (!email) throw new Error('server error, please try again');

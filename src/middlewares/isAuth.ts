@@ -1,6 +1,6 @@
 import { MiddlewareFn } from 'type-graphql';
 import jwt from 'jsonwebtoken';
-import admin from '../firebase';
+import admin from '../utils/firebase';
 import { RequestContext } from '../types/RequestContext';
 import User from '../entities/User';
 

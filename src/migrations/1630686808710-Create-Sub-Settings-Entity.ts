@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
+// eslint-disable-next-line import/prefer-default-export
 export class CreateSubSettingsEntity1630686808710
   implements MigrationInterface
 {

@@ -1,6 +1,6 @@
 import { Field, ObjectType } from 'type-graphql';
 import User from '../../../entities/User';
-import BaseResponse from '../../../utils/baseResponse';
+import BaseResponse from '../../shared/baseResponse';
 
 @ObjectType()
 class RegisterResponse extends BaseResponse {

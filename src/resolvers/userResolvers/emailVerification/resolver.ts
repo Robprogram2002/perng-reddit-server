@@ -2,7 +2,7 @@ import { Arg, Mutation, Resolver } from 'type-graphql';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import User from '../../../entities/User';
-import BaseResponse from '../../../utils/baseResponse';
+import BaseResponse from '../../shared/baseResponse';
 
 dotenv.config();
 
