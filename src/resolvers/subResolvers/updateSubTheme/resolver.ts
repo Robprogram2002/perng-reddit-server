@@ -13,10 +13,10 @@ import {
   UpdateSubProfileInput,
   UpdateSubThemeInput,
 } from './input';
-import { upload } from '../../../utils/uploadImage';
 import ColorImageInput from '../shared/ColorImageInput';
 import ColorImage from '../shared/ColorImageType';
 import isSubOwner from '../../../middlewares/isSubOwner';
+import { remove, upload } from '../../../utils/uploadImage';
 
 dotenv.config();
 
@@ -80,11 +80,28 @@ class UpdateSubTheme {
     try {
       const sub = res.locals.sub as Sub;
 
-      const imageObject = imageBase ? await upload(imageBase) : null;
+      let imageObject = sub.settings?.profile;
+
+      if (imageBase) {
+        // user want to upload a new image
+
+        if (imageObject) {
+          // the user already have an image profile, let's remove it form cloudinary
+          const result = await remove(imageObject.publicId);
+          if (result.success !== true)
+            throw new Error('ups, something went wrong , please try again');
+        }
+
+        // reasign the variable with the new image data
+        imageObject = await upload(imageBase);
+      }
+
+      // else: user don't want to change profile image
 
       const updateResult = await getConnection()
         .createQueryBuilder()
         .update(SubSettings)
+        // if user doesn't upload an image, then imageObject is the same as was already the user have in DB
         .set({ profile: imageObject, title })
         .where('id = :id', {
           id: sub.settings?.id,
@@ -105,7 +122,6 @@ class UpdateSubTheme {
       if (error instanceof Error) {
         message = error.message;
       }
-
       return {
         code: 500,
         success: false,
@@ -123,7 +139,23 @@ class UpdateSubTheme {
   ): Promise<CreateSubResponse> {
     try {
       const sub = res.locals.sub as Sub;
-      const imageObject = imageBase ? await upload(imageBase) : null;
+
+      let imageObject = sub.settings?.banner;
+
+      if (imageBase) {
+        // user want to upload a new image
+        if (imageObject) {
+          // the user already have an image profile, let's remove it form cloudinary
+          const result = await remove(imageObject.publicId);
+          if (result.success !== true)
+            throw new Error('ups, something went wrong , please try again');
+        }
+
+        // reasign the variable with the new image data
+        imageObject = await upload(imageBase);
+      }
+
+      // else: user don't want to change profile image
 
       const updateResult = await getConnection()
         .createQueryBuilder()

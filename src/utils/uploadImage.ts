@@ -32,11 +32,9 @@ export const upload = async (image: string) => {
 };
 
 export const remove = async (publicId: string) => {
-  try {
-    const error = await cloudinary.v2.uploader.destroy(publicId);
-    if (error) throw error;
+  const { result } = await cloudinary.v2.uploader.destroy(publicId);
+  if (result === 'ok') {
     return { success: true, publicId };
-  } catch (err) {
-    return err;
   }
+  throw new Error('something went wrong while removing image');
 };

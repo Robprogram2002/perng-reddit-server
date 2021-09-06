@@ -43,18 +43,18 @@ class SubSettings extends SharedEntity {
 
   @Field(() => String, { description: "sub's base color for theme" })
   @Column('varchar', { length: 100, default: '#0079d3' })
-  baseColor: string | undefined;
+  baseColor!: string;
 
   @Field(() => String, { description: "sub's highlight color for theme" })
   @Column('varchar', { length: 100, default: '#0079d3' })
-  highlightColor: string | undefined;
+  highlightColor!: string;
 
   @Field(() => ColorImage, {
     description:
       "Json type field. Store the type and value for the sub's body background",
   })
   @Column('simple-json', { default: defaultSubBodyBackground })
-  bodyBackground: ColorImage | undefined;
+  bodyBackground!: ColorImage;
 
   @Field(() => BannerSize, {
     description: "sub's banner size ",

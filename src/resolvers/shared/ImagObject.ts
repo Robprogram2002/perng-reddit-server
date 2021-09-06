@@ -6,8 +6,8 @@ export default class ImageObject {
     nullable: false,
     description: "image's id",
   })
-  publicId: string | undefined;
+  publicId!: string;
 
   @Field(() => String, { nullable: false, description: "image's secure url" })
-  url: string | undefined;
+  url!: string;
 }
