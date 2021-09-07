@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { getConnection } from 'typeorm';
 import isAuthValidaton from '../../../middlewares/isAuthValidaton';
 import isAuth from '../../../middlewares/isAuth';
+import isSubOwner from '../../../middlewares/isSubOwner';
 import { RequestContext } from '../../../types/RequestContext';
 import CreateSubResponse from '../createSub/response';
 import SubSettings from '../../../entities/SubSettings';
@@ -15,7 +16,6 @@ import {
 } from './input';
 import ColorImageInput from '../shared/ColorImageInput';
 import ColorImage from '../shared/ColorImageType';
-import isSubOwner from '../../../middlewares/isSubOwner';
 import { remove, upload } from '../../../utils/uploadImage';
 
 dotenv.config();

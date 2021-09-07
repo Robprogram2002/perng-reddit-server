@@ -2,12 +2,17 @@ import { buildSchema } from 'type-graphql';
 import AuthorizationCheck from '../middlewares/authorizationCheck';
 import subsResolvers from '../resolvers/subResolvers';
 import userResolvers from '../resolvers/userResolvers';
+import topicResolvers from '../resolvers/topicResolvers';
 import HelloResolver from './testResolver';
 
 const createSchema = async () =>
   buildSchema({
-    //   regex : `${__dirname}../resolvers/**/resolver.ts`,
-    resolvers: [HelloResolver, ...userResolvers, ...subsResolvers],
+    resolvers: [
+      HelloResolver,
+      ...userResolvers,
+      ...subsResolvers,
+      ...topicResolvers,
+    ],
     authChecker: AuthorizationCheck,
   });
 

@@ -4,6 +4,7 @@ import {
   FieldResolver,
   Mutation,
   Resolver,
+  ResolverInterface,
   Root,
   UseMiddleware,
 } from 'type-graphql';
@@ -18,11 +19,12 @@ import isAuth from '../../../middlewares/isAuth';
 import { RequestContext } from '../../../types/RequestContext';
 import SubSettings from '../../../entities/SubSettings';
 import User from '../../../entities/User';
+import Topic from '../../../entities/Topic';
 
 dotenv.config();
 
 @Resolver(() => Sub)
-class CreateSubResolver {
+class CreateSubResolver implements ResolverInterface<Sub> {
   // @UseMiddleware([isAuth, isAuthValidaton])
   @UseMiddleware([isAuth])
   @Mutation(() => CreateSubResponse)
@@ -31,7 +33,8 @@ class CreateSubResolver {
     @Arg('input') { adultContent, name, type }: CreateSubInput
   ): Promise<CreateSubResponse> {
     try {
-      console.log(res.locals);
+      const { id } = res.locals.user as User;
+
       let subType: SubType;
       if (type === String(SubType.PRIVATE)) {
         subType = SubType.PRIVATE;
@@ -52,6 +55,8 @@ class CreateSubResolver {
         username: 'Roberto Martínez Rivera',
         settings,
       }).save();
+
+      await Sub.createQueryBuilder().relation('joinedUsers').of(this).add(id);
 
       return {
         code: 200,
@@ -84,13 +89,63 @@ class CreateSubResolver {
     return settings;
   }
 
-  @FieldResolver(() => User)
+  // @FieldResolver(() => User)
+  @FieldResolver()
   async user(@Root() sub: Sub) {
-    const owner = await User.findOne(
-      { username: sub.username },
-      { loadEagerRelations: false }
-    );
+    const owner = await getConnection()
+      .createQueryBuilder()
+      .relation(Sub, 'user')
+      .of(sub.id)
+      .loadOne<User>();
     return owner;
+  }
+
+  @FieldResolver()
+  async mainTopic(@Root() sub: Sub) {
+    const topic = await getConnection()
+      .createQueryBuilder()
+      .relation(Sub, 'mainTopic')
+      .of(sub.id)
+      .loadOne();
+
+    return topic ?? null;
+  }
+
+  @FieldResolver(() => [Topic])
+  async subTopics(@Root() sub: Sub) {
+    const topics = await getConnection()
+      .createQueryBuilder()
+      .relation(Sub, 'subTopics')
+      .of(sub.id)
+      .loadMany();
+
+    return topics ?? null;
+  }
+
+  @FieldResolver()
+  async isJoin(
+    @Root() sub: Sub,
+    @Arg('userId', () => String, { nullable: true }) userId: string | null
+  ): Promise<boolean> {
+    if (!userId) return false;
+
+    const resultCount = await Sub.createQueryBuilder('community')
+      .leftJoinAndSelect('community.joinedUsers', 'users')
+      .where('community.id = :subId', { subId: sub.id })
+      .andWhere('users.id = :userId', { userId })
+      .getCount();
+
+    return Boolean(resultCount);
+  }
+
+  @FieldResolver()
+  async usersCount(@Root() sub: Sub): Promise<number> {
+    const count = await Sub.createQueryBuilder('community')
+      .leftJoinAndSelect('community.joinedUsers', 'users')
+      .where('community.id = :subId', { subId: sub.id })
+      .getCount();
+
+    return count;
   }
 }
 

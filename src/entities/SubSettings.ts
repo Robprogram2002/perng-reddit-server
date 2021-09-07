@@ -1,7 +1,7 @@
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity } from 'typeorm';
 import ColorImage from '../resolvers/subResolvers/shared/ColorImageType';
-import BannerSize from '../types/SubSettingsTypes';
+import BannerSize, { NameFormat } from '../types/SubSettingsTypes';
 import ImageObject from '../resolvers/shared/ImagObject';
 import SharedEntity from './Entity';
 
@@ -33,6 +33,12 @@ class SubSettings extends SharedEntity {
   @Field(() => String, { description: "sub's title", nullable: true })
   @Column('varchar', { length: 250, nullable: true, default: null })
   title!: string | null;
+
+  @Field(() => NameFormat, {
+    description: 'format in which the name and title of a sub would be show',
+  })
+  @Column('enum', { enum: NameFormat, default: NameFormat.Together })
+  nameFormat: NameFormat | undefined;
 
   @Field(() => ImageObject, {
     description: "image object for the sub's banner image",

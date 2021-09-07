@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import Provider from '../types/AuthProvider';
 import SharedEntity from './Entity';
 import Sub from './Sub';
@@ -45,8 +45,19 @@ class User extends SharedEntity {
   @Column('text', { nullable: true })
   password: string | undefined;
 
+  @Field(() => [Sub], {
+    description: 'list of subs for wich this user is the owner/creator',
+  })
   @OneToMany(() => Sub, (sub) => sub.user)
   subs: Sub[] | undefined;
+
+  @Field(() => [Sub], {
+    description: 'list of subs for which this user has joined',
+    nullable: true,
+  })
+  @ManyToMany(() => Sub, (sub) => sub.joinedUsers, { nullable: true })
+  @JoinTable()
+  joinedSubs: Sub[] | undefined;
 }
 
 export default User;

@@ -3,21 +3,15 @@ import Sub from '../entities/Sub';
 // import User from '../entities/User';
 import { RequestContext } from '../types/RequestContext';
 
-const isSubOwner: MiddlewareFn<RequestContext> = async (
+const edditSub: MiddlewareFn<RequestContext> = async (
   { args, context: { res } },
   next
 ) => {
   try {
-    const subName = args.input.subName as string;
+    const subName = args.subName as string;
     // const { username } = res.locals.user as User;
     const username = 'Roberto Martínez Rivera';
-    const sub = await Sub.findOne(
-      { name: subName },
-      {
-        select: ['id', 'settings', 'username'],
-        relations: ['settings'],
-      }
-    );
+    const sub = await Sub.findOne({ name: subName });
 
     if (!sub) throw new Error('no sub was found with this id');
 
@@ -35,4 +29,4 @@ const isSubOwner: MiddlewareFn<RequestContext> = async (
   }
 };
 
-export default isSubOwner;
+export default edditSub;

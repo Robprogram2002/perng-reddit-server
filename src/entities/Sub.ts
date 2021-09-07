@@ -1,6 +1,15 @@
-import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Field, Int, ObjectType } from 'type-graphql';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import SubType from '../types/SubTypes';
+import Topic from './Topic';
 import SharedEntity from './Entity';
 import SubSettings from './SubSettings';
 import User from './User';
@@ -47,9 +56,41 @@ class Sub extends SharedEntity {
   @JoinColumn()
   settings: SubSettings | undefined;
 
+  @Field(() => User, { description: 'owner of the sub' })
   @ManyToOne(() => User, (user) => user.subs)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User | undefined;
+
+  @Field(() => Topic, {
+    description: "sub's main topic",
+    nullable: true,
+  })
+  @OneToOne(() => Topic, { nullable: true })
+  @JoinColumn()
+  mainTopic: Topic | undefined;
+
+  @Field(() => [Topic], {
+    description: "sub's secondary topics",
+    nullable: true,
+  })
+  @ManyToMany(() => Topic, { nullable: true })
+  @JoinTable()
+  subTopics: Topic[] | undefined;
+
+  @ManyToMany(() => User, (user) => user.joinedSubs, { nullable: true })
+  joinedUsers: User[] | undefined;
+
+  @Field(() => Boolean, {
+    defaultValue: false,
+    description: 'whether or not the current user has been joined to this sub',
+  })
+  isJoin!: Boolean;
+
+  @Field(() => Int, {
+    nullable: false,
+    description: "count of sub's joined users ",
+  })
+  usersCount: Number | undefined;
 }
 
 export default Sub;

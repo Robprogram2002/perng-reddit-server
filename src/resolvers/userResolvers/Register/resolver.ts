@@ -1,18 +1,20 @@
-import { Arg, Mutation, Resolver } from 'type-graphql';
+import { Arg, FieldResolver, Mutation, Resolver, Root } from 'type-graphql';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
+import { getConnection } from 'typeorm';
 import RegisterInput from './input';
 import RegisterResponse from './response';
 import User from '../../../entities/User';
 import Provider from '../../../types/AuthProvider';
+import Sub from '../../../entities/Sub';
 
 dotenv.config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
-@Resolver()
+@Resolver(() => User)
 class RegisterResolver {
   @Mutation(() => RegisterResponse)
   async register(
@@ -73,6 +75,28 @@ class RegisterResolver {
         message,
         user: null,
       };
+    }
+  }
+
+  @FieldResolver(() => [Sub])
+  async subs(@Root() user: User) {
+    const userOwnSubs = await Sub.find({ where: { username: user.username } });
+    return userOwnSubs;
+  }
+
+  @FieldResolver(() => [Sub])
+  async joinedSubs(@Root() user: User) {
+    try {
+      const userOwnSubs = await getConnection()
+        .createQueryBuilder()
+        .relation(User, 'joinedSubs')
+        .of(user.id)
+        .loadMany<Sub>();
+
+      return userOwnSubs;
+    } catch (error) {
+      console.log(error);
+      return null;
     }
   }
 }
