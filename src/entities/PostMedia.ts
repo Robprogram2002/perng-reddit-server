@@ -16,6 +16,10 @@ class PostMedia extends SharedEntity {
   @Column('varchar', { length: 250, nullable: false })
   url: string | undefined;
 
+  @Field(() => String!, { description: "meida's public id" })
+  @Column('varchar', { length: 250, nullable: false })
+  publicId: string | undefined;
+
   @Field(() => String, { description: "media's caption text", nullable: true })
   @Column('text', { nullable: true })
   caption!: string | null;

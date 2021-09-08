@@ -2,7 +2,7 @@ import { Query, Resolver } from 'type-graphql';
 import Topic from '../../../entities/Topic';
 
 @Resolver()
-class CreateTopicResolver {
+class FetchTopicsResolver {
   @Query(() => [Topic], { nullable: true })
   async topics(): Promise<Topic[] | null> {
     try {
@@ -15,4 +15,4 @@ class CreateTopicResolver {
   }
 }
 
-export default CreateTopicResolver;
+export default FetchTopicsResolver;

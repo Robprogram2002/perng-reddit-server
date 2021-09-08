@@ -9,6 +9,7 @@ import RegisterResponse from './response';
 import User from '../../../entities/User';
 import Provider from '../../../types/AuthProvider';
 import Sub from '../../../entities/Sub';
+import Post from '../../../entities/Post';
 
 dotenv.config();
 
@@ -79,25 +80,29 @@ class RegisterResolver {
   }
 
   @FieldResolver(() => [Sub])
-  async subs(@Root() user: User) {
+  async subs(@Root() user: User): Promise<Sub[]> {
     const userOwnSubs = await Sub.find({ where: { username: user.username } });
     return userOwnSubs;
   }
 
   @FieldResolver(() => [Sub])
-  async joinedSubs(@Root() user: User) {
-    try {
-      const userOwnSubs = await getConnection()
-        .createQueryBuilder()
-        .relation(User, 'joinedSubs')
-        .of(user.id)
-        .loadMany<Sub>();
+  async joinedSubs(@Root() user: User): Promise<Sub[]> {
+    const userOwnSubs = await getConnection()
+      .createQueryBuilder()
+      .relation(User, 'joinedSubs')
+      .of(user.id)
+      .loadMany<Sub>();
 
-      return userOwnSubs;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+    return userOwnSubs;
+  }
+
+  @FieldResolver()
+  async posts(@Root() user: User): Promise<Post[]> {
+    const posts = await User.createQueryBuilder()
+      .relation('posts')
+      .of(user)
+      .loadMany<Post>();
+    return posts;
   }
 }
 

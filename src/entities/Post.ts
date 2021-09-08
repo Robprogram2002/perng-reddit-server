@@ -2,6 +2,7 @@ import { Field, ObjectType } from 'type-graphql';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -57,8 +58,12 @@ class Post extends SharedEntity {
   })
   type!: PostTypes;
 
+  @Column('uuid', { nullable: false })
+  subId: string | undefined;
+
   @Field(() => Sub!, { description: 'the sub which this product belongs to' })
   @ManyToOne(() => Sub, (sub) => sub.posts)
+  @JoinColumn({ name: 'subId' })
   sub: Sub | undefined;
 
   @Field(() => User!, { description: 'the user who create this post' })
@@ -68,7 +73,9 @@ class Post extends SharedEntity {
   @Field(() => [PostMedia], {
     description: 'list of media objects that belongs to this post',
   })
-  @OneToMany(() => PostMedia, (media) => media.post)
+  @OneToMany(() => PostMedia, (media) => media.post, {
+    cascade: ['insert', 'update', 'recover'],
+  })
   media: PostMedia[] | undefined;
 
   @Field(() => [Tag], {

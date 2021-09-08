@@ -20,6 +20,7 @@ import { RequestContext } from '../../../types/RequestContext';
 import SubSettings from '../../../entities/SubSettings';
 import User from '../../../entities/User';
 import Topic from '../../../entities/Topic';
+import Post from '../../../entities/Post';
 
 dotenv.config();
 
@@ -146,6 +147,16 @@ class CreateSubResolver implements ResolverInterface<Sub> {
       .getCount();
 
     return count;
+  }
+
+  @FieldResolver()
+  async posts(@Root() sub: Sub): Promise<Post[]> {
+    const posts = await Sub.createQueryBuilder()
+      .relation('posts')
+      .of(sub.id)
+      .loadMany<Post>();
+
+    return posts;
   }
 }
 
