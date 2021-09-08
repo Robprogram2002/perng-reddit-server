@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import SubType from '../types/SubTypes';
@@ -13,6 +14,7 @@ import Topic from './Topic';
 import SharedEntity from './Entity';
 import SubSettings from './SubSettings';
 import User from './User';
+import Post from './Post';
 
 @ObjectType()
 @Entity()
@@ -91,6 +93,10 @@ class Sub extends SharedEntity {
     description: "count of sub's joined users ",
   })
   usersCount: Number | undefined;
+
+  @Field(() => [Post], { description: 'all posts that belongs to this sub' })
+  @OneToMany(() => Post, (post) => post.sub)
+  posts: Post[] | undefined;
 }
 
 export default Sub;

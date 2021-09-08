@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { Field, ObjectType } from 'type-graphql';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import Provider from '../types/AuthProvider';
 import SharedEntity from './Entity';
+import Post from './Post';
 import Sub from './Sub';
 
 @ObjectType()
@@ -58,6 +58,12 @@ class User extends SharedEntity {
   @ManyToMany(() => Sub, (sub) => sub.joinedUsers, { nullable: true })
   @JoinTable()
   joinedSubs: Sub[] | undefined;
+
+  @Field(() => [Post], {
+    description: 'list of posts created by the user',
+  })
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[] | undefined;
 }
 
 export default User;
